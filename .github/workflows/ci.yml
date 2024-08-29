@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ./frontend/package-lock.json
         
     - name: Install NextJS CI dependencies
       run: npm ci
@@ -34,6 +35,7 @@ jobs:
     - name: Test NextJS
       working-directory: ./frontend
       run: npm test
+      
   nestjs-tests:
     runs-on: ubuntu-latest
     strategy:
@@ -46,6 +48,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ./backend/package-lock.json
+        
     - name: Install NestJS CI dependencies
       run: npm ci
       working-directory: ./backend
