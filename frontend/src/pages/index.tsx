@@ -24,7 +24,7 @@ const fetchArticles = async () => {
     return data;
   } catch (error) {
     console.error("Error fetching articles:", error);
-    return null; // Return null if there's an error this tells us it is using the dummy data
+    return null; // Return null if there's an error, this tells us it is using the dummy data
   }
 };
 
@@ -60,15 +60,14 @@ export default function Home() {
   });
 
   const handleSort = (column: keyof ArticleInterface) => {
-	console.log("Sorting by:", column); // Check if the sort function is triggered
-	let direction = "ascending";
-	if (sortConfig?.key === column && sortConfig.direction === "ascending") {
-	  direction = "descending";
-	}
-	setSortConfig({ key: column, direction });
-	console.log("New sort config:", { key: column, direction });
+    console.log("Sorting by:", column); // Check if the sort function is triggered
+    let direction = "ascending";
+    if (sortConfig?.key === column && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key: column, direction });
+    console.log("New sort config:", { key: column, direction });
   };
-  
 
   const headers: { key: keyof ArticleInterface; label: string }[] = [
     { key: "title", label: "Title" },
@@ -83,7 +82,12 @@ export default function Home() {
   return (
     <div className="container">
       <h1>Software Practice Empirical Evidence Database (SPEED)</h1>
-      <SortableTable headers={headers} data={sortedArticles} />
+      <SortableTable 
+        headers={headers} 
+        data={sortedArticles} 
+        onSort={handleSort} 
+        sortConfig={sortConfig} 
+      />
     </div>
   );
 }
