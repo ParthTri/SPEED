@@ -1,17 +1,7 @@
 import { useEffect, useState } from "react";
 import SortableTable from "../components/table/SortableTable";
 import data from "../utils/dummydata"; // Dummy data for fallback
-
-interface ArticleInterface {
-  id: string;
-  title: string;
-  authors: string;
-  source: string;
-  pubyear: string;
-  doi: string;
-  claim: string;
-  evidence: string;
-}
+import { ArticleInterface } from "@/utils/article.interface";
 
 // API call function
 const fetchArticles = async () => {

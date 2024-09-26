@@ -1,4 +1,5 @@
-const data = [
+import { ArticleInterface } from "./article.interface";
+const data: ArticleInterface[] = [
 	{
 		id: "1",
 		title:
@@ -11,7 +12,7 @@ const data = [
 		evidence: "strong support",
 	},
 	{
-		_id: "2",
+		id: "2",
 		title:
 			"An experimental evaluation of test driven development vs. test-last development with industry professionals",
 		authors: "Munir, H., Wnuk, K., Petersen, K., Moayyed, M.",
@@ -22,7 +23,7 @@ const data = [
 		evidence: "weak support",
 	},
 	{
-		_id: "3",
+		id: "3",
 		title:
 			"Realizing quality improvement through test driven development: results and experiences of four industrial teams",
 		authors: "Nagappan, N., Maximilien, E. M., Bhat, T., Williams, L.",
@@ -33,7 +34,7 @@ const data = [
 		evidence: "weak support",
 	},
 	{
-		_id: "4",
+		id: "4",
 		title:
 			"Does Test-Driven Development Really Improve Software Design Quality?",
 		authors: "Janzen, D. S.",
@@ -44,7 +45,7 @@ const data = [
 		evidence: "strong support",
 	},
 	{
-		_id: "5",
+		id: "5",
 		title:
 			"A Comparative Case Study on the Impact of Test-Driven Development on Program Design and Test Coverage",
 		authors: "Siniaalto, M., Abrahamsson, P.",
