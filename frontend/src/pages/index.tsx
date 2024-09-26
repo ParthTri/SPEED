@@ -4,9 +4,9 @@ import data from "../utils/dummydata"; // Dummy data for fallback
 import { ArticleInterface } from "@/utils/article.interface";
 
 // API call function
-const fetchArticles = async (): Promise<ArticleInterface[] | null> => {
+const fetchArticles = async () => {
 	try {
-		const response = await fetch("/api/articles"); // Replace API URL
+		const response = await fetch("http://localhost:3000/api/articles"); // Full API URL for backend
 		if (!response.ok) {
 			throw new Error("Failed to fetch");
 		}
