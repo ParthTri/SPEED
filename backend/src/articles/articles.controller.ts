@@ -13,13 +13,13 @@ export class ArticlesController {
   }
 
   //get all articles with pending state
-  @Get()
+  @Get('pending')
   async getPendingArticles(): Promise<Article[]> {
     return this.articlesService.getArticlesByState('pending');
   }
 
   //get all articles with approved state
-  @Get()
+  @Get('approved')
   async getApprovedArticles(): Promise<Article[]> {
     return this.articlesService.getArticlesByState('approved');
   }

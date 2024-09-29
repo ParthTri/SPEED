@@ -15,6 +15,11 @@ export class ArticlesService {
     return this.articleModel.find().exec(); // Fetches all articles from MongoDB
   }
 
+  // Method to fetch all articles based on state
+  async getArticlesByState(state: string): Promise<Article[]> {
+    return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
+  }
+
   // Additional methods for creating, updating, or deleting articles can go here
   async addArticle(article: CreateArticleDTO): Promise<boolean> {
     try {

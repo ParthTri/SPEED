@@ -20,6 +20,7 @@ const NewDiscussion = () => {
 			doi,
 			summary,
 			linked_discussion: linkedDiscussion,
+			state: "pending"
 		});
 		try {
 			const res = await fetch("http://localhost:3000/api/articles", {

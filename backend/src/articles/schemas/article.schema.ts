@@ -24,7 +24,7 @@ export class Article extends Document {
   @Prop()
   linked_discussion: string;
 
-  @Prop({ default: 'pending' }) // Default state is 'pending'
+  @Prop()
   state: string;
 }
 
