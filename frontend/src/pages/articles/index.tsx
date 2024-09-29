@@ -2,7 +2,6 @@ import { GetStaticProps, NextPage } from "next";
 import { useState } from "react";
 import SortableTable from "../../components/table/SortableTable";
 import ArticleDetail from "../../components/ArticleDetail";
-import data from "../../utils/dummydata";
 import { ArticleInterface } from "@/utils/article.interface";
 
 type ArticlesProps = {
@@ -10,11 +9,11 @@ type ArticlesProps = {
 };
 
 const Articles: NextPage<ArticlesProps> = ({ articles }) => {
-  // State to manage sorting and selected article for detail view
   const [sortConfig, setSortConfig] = useState<{
     key: keyof ArticleInterface;
     direction: string;
   } | null>(null);
+  
   const [selectedArticle, setSelectedArticle] = useState<ArticleInterface | null>(null);
 
   // Sorting logic
@@ -52,6 +51,7 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
   // Table headers
   const headers: { key: keyof ArticleInterface; label: string }[] = [
     { key: "title", label: "Title" },
+    // Add other headers if needed
   ];
 
   return (
@@ -78,23 +78,32 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
 
 // Fetch articles as static props
 export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
-  // Ensure all articles have consistent properties
-  const articles = data.map((article) => ({
-    id: article.id ?? article.id,
-    title: article.title,
-    authors: article.authors,
-    source: article.source,
-    pubyear: article.pubyear,
-    doi: article.doi,
-    claim: article.claim,
-    evidence: article.evidence,
-  }));
+  try {
+    // Fetch data from your backend API
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles`);
+    
+    // Check if the response was successful
+    if (!response.ok) {
+      throw new Error("Failed to fetch articles");
+    }
 
-  return {
-    props: {
-      articles,
-    },
-  };
+    const articles: ArticleInterface[] = await response.json();
+
+    return {
+      props: {
+        articles,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+
+    // Return empty array if an error occurs
+    return {
+      props: {
+        articles: [],
+      },
+    };
+  }
 };
 
 export default Articles;
