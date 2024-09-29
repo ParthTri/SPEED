@@ -19,6 +19,12 @@ export class ArticlesController {
   }
 
   //get all articles with approved state
+  @Get('rejected')
+  async getRejectedArticles(): Promise<Article[]> {
+    return this.articlesService.getArticlesByState('approved');
+  }
+
+  //get all articles with approved state
   @Get('approved')
   async getApprovedArticles(): Promise<Article[]> {
     return this.articlesService.getArticlesByState('approved');
