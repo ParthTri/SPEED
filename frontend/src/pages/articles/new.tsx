@@ -12,18 +12,27 @@ const NewDiscussion = () => {
 
 	const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
-		console.log(
-			JSON.stringify({
-				title,
-				authors,
-				source,
-				publication_year: pubYear,
-				doi,
-				summary,
-				linked_discussion: linkedDiscussion,
-			})
-		);
+		const body: string = JSON.stringify({
+			title,
+			authors,
+			source,
+			pubyear: pubYear,
+			doi,
+			summary,
+			linked_discussion: linkedDiscussion,
+		});
+		try {
+			const res = await fetch("http://localhost:3000/api/articles", {
+				method: "POST",
+				body: body,
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+			});
+		} catch (e) {
+			console.log(e);
+		}
 	}; // Some helper methods for the authors array
 
 	const addAuthor = () => {

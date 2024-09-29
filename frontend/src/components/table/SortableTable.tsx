@@ -3,14 +3,25 @@ import React from "react";
 interface SortableTableProps {
 	headers: { key: string; label: string }[];
 	data: any[];
+	onSort: (key: any) => void; // Pass sorting handler from parent component
+	sortConfig: { key: any; direction: string } | null; // Current sorting configuration
 }
 
-const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => (
+const SortableTable: React.FC<SortableTableProps> = ({
+	headers,
+	data,
+	onSort,
+	sortConfig,
+}) => (
 	<table>
 		<thead>
 			<tr>
 				{headers.map((header) => (
-					<th key={header.key}>{header.label}</th>
+					<th key={header.key} onClick={() => onSort(header.key)}>
+						{header.label}
+						{sortConfig?.key === header.key &&
+							(sortConfig.direction === "ascending" ? " ↑" : " ↓")}
+					</th>
 				))}
 			</tr>
 		</thead>
