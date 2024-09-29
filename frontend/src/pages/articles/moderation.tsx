@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ArticleInterface } from "@/utils/article.interface";
 
-
 const ModerationPage = () => {
+
+var current = 1
 
   // API call function
 const fetchArticles = async () => {
@@ -71,7 +72,7 @@ const rejectArticle = async (id: string) => {
   //list of articles that have been submitted
   const queueList = articles.map((article) => (
     <li key={(article as any)._id}>
-      <p><strong>Submission</strong></p>
+      <p><strong>Submission{' '+current++}</strong></p>
       <p>
         <strong>Title: </strong>{article.title}<br />
         <strong>Authors: </strong> {article.authors}<br />
