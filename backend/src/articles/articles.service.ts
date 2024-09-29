@@ -26,4 +26,20 @@ export class ArticlesService {
       return false;
     }
   }
+
+  // Method to update the state of an article
+  async updateArticleState(
+    articleId: string,
+    newState: string,
+  ): Promise<boolean> {
+    try {
+      await this.articleModel
+        .findByIdAndUpdate(articleId, { state: newState })
+        .exec();
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
 }

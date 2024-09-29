@@ -23,6 +23,9 @@ export class Article extends Document {
 
   @Prop()
   linked_discussion: string;
+
+  @Prop({ default: 'pending' }) // Default state is 'pending'
+  state: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
