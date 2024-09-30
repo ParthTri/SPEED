@@ -6,4 +6,5 @@ export interface CreateArticleDTO {
   doi: string;
   summary: string;
   linked_discussion: string;
+  state: string;
 }

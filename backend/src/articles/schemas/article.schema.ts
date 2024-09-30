@@ -23,6 +23,9 @@ export class Article extends Document {
 
   @Prop()
   linked_discussion: string;
+
+  @Prop()
+  state: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
