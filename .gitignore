@@ -10,6 +10,7 @@ node_modules/
 /.project
 /.settings 
 *.code-workspace
+.env
 
 # Vim
 [._]*.s[a-v][a-z]
