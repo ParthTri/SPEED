@@ -80,7 +80,7 @@ const NewDiscussion = () => {
 			{formType == FormType.STANDARD ? (
 				<SubmissionForm setBody={setBody} submitArticle={submitNewArticle} />
 			) : (
-				<BibtexForm />
+				<BibtexForm setBody={setBody} submitArticle={submitNewArticle} />
 			)}
 		</div>
 	);
