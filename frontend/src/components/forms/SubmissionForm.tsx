@@ -79,7 +79,7 @@ export default function SubmissionForm({ setBody, submitArticle }: FormProps) {
 			return;
 		}
 
-		submitArticle(e);
+		submitArticle();
 	};
 
 	return (

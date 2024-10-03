@@ -3,5 +3,5 @@ import { FormEvent } from "react";
 
 export interface FormProps {
 	setBody: (val: ArticleInterface[]) => void;
-	submitArticle: (e: FormEvent<HTMLFormElement>) => void;
+	submitArticle: () => void;
 }

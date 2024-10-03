@@ -27,9 +27,7 @@ const NewDiscussion = () => {
 	const [formType, setFormType] = useState<FormType>(FormType.BIBTEX);
 	const [checked, setChecked] = useState<boolean>(true);
 
-	const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
+	const submitNewArticle = async () => {
 		try {
 			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/api/articles`,
