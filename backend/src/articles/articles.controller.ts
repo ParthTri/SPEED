@@ -31,7 +31,7 @@ export class ArticlesController {
   }
 
   @Post()
-  async submitArticle(@Body() article: CreateArticleDTO): Promise<boolean> {
+  async submitArticle(@Body() article: CreateArticleDTO[]): Promise<boolean> {
     return this.articlesService.addArticle(article);
   }
 
