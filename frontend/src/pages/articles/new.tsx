@@ -1,10 +1,9 @@
 import { FormEvent, useState } from "react";
-import formStyles from "../../styles/Form.module.scss";
 import BibtexForm from "@/components/forms/BibTexForm";
 import Switch from "react-switch";
 import SubmissionForm from "@/components/forms/SubmissionForm";
 import { ArticleInterface } from "@/utils/article.interface";
-import ArticleDetail from "@/components/ArticleDetail";
+import { useRouter } from "next/router";
 
 enum FormType {
 	STANDARD,
@@ -22,6 +21,7 @@ export interface Errors {
 }
 
 const NewDiscussion = () => {
+	const router = useRouter();
 	const [body, setBody] = useState<ArticleInterface[]>([]);
 
 	const [formType, setFormType] = useState<FormType>(FormType.BIBTEX);
@@ -40,6 +40,9 @@ const NewDiscussion = () => {
 					},
 				}
 			);
+
+			alert("Article Submited");
+			router.push("/");
 		} catch (e) {
 			console.log(e);
 		}
