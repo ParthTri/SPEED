@@ -90,7 +90,7 @@ export default function BibtexForm({ setBody, submitArticle }: FormProps) {
 	return (
 		<>
 			<h2>BibTex</h2>
-			<p>Please use "journal" field for the source</p>
+			<p>Please use &quot;@journal&quot; field for the source</p>
 			<div className={formStyles.main}>
 				<form className="form" action="POST" onSubmit={(e) => onSubmit(e)}>
 					<label htmlFor="bibtex">
