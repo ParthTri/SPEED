@@ -4,14 +4,14 @@ import { BibtexParser } from "bibtex-js-parser";
 import { FormProps } from "./FormProps.interface";
 import { ArticleInterface } from "@/utils/article.interface";
 
-function formatData(data: any[]): ArticleInterface[] {
+export function formatData(data: any[]): ArticleInterface[] {
 	const articles: ArticleInterface[] = [];
 	data.forEach((obj) => {
 		const article: ArticleInterface = {
 			title: obj["title"],
 			authors: obj["author"].split(" and "),
 			source: obj["journal"],
-			pubyear: obj["year"],
+			pubyear: Number.parseInt(obj["year"]),
 			doi: obj["doi"],
 		};
 
