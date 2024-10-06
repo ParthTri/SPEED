@@ -46,7 +46,10 @@ export default function BibtexForm({ setBody, submitArticle }: FormProps) {
 			if (entry.year == null) {
 				newErr.pubYear = "Please enter a valid publication date";
 			} else {
-				const pubYearNumber = Number.parseInt(entry.year, 10); // Convert pubYear to a number
+				const pubYearNumber: number =
+					typeof entry.year == "string"
+						? Number.parseInt(entry.year, 10)
+						: entry.year; // Convert pubYear to a number
 				if (
 					!entry.year ||
 					isNaN(pubYearNumber) ||
@@ -109,8 +112,8 @@ export default function BibtexForm({ setBody, submitArticle }: FormProps) {
 				<div>
 					{errors.map((val, index) => (
 						<ul key={index}>
-							{Object.entries(val).map(([, text], index) => (
-								<li key={index}>{text}</li>
+							{Object.entries(val).map(([_, val], index) => (
+								<li key={index}>{val as React.ReactNode}</li>
 							))}
 						</ul>
 					))}
