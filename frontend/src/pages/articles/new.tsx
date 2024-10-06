@@ -24,8 +24,8 @@ const NewDiscussion = () => {
 	const router = useRouter();
 	const [body, setBody] = useState<ArticleInterface[]>([]);
 
-	const [formType, setFormType] = useState<FormType>(FormType.BIBTEX);
-	const [checked, setChecked] = useState<boolean>(true);
+	const [formType, setFormType] = useState<FormType>(FormType.STANDARD);
+	const [checked, setChecked] = useState<boolean>(false);
 
 	const submitNewArticle = async () => {
 		try {
