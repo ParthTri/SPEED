@@ -4,6 +4,23 @@ import { BibtexParser } from "bibtex-js-parser";
 import { FormProps } from "./FormProps.interface";
 import { ArticleInterface } from "@/utils/article.interface";
 
+function formatData(data: any[]): ArticleInterface[] {
+	const articles: ArticleInterface[] = [];
+	data.forEach((obj) => {
+		const article: ArticleInterface = {
+			title: obj["title"],
+			authors: obj["author"].split(" and "),
+			source: obj["journal"],
+			pubyear: obj["year"],
+			doi: obj["doi"],
+		};
+
+		articles.push(article);
+	});
+
+	return articles;
+}
+
 export default function BibtexForm({ setBody, submitArticle }: FormProps) {
 	const [bibtex, setBib] = useState<string>("");
 	const [errors, setErrors] = useState<any[]>([]); // Error handling state
@@ -48,23 +65,6 @@ export default function BibtexForm({ setBody, submitArticle }: FormProps) {
 		});
 
 		return newErrors;
-	};
-
-	const formatData = (data: any[]): ArticleInterface[] => {
-		const articles: ArticleInterface[] = [];
-		data.forEach((obj) => {
-			const article: ArticleInterface = {
-				title: obj["title"],
-				authors: obj["author"].split(" and "),
-				source: obj["journal"],
-				pubyear: obj["year"],
-				doi: obj["doi"],
-			};
-
-			articles.push(article);
-		});
-
-		return articles;
 	};
 
 	const onSubmit = (e: FormEvent) => {
