@@ -1,15 +1,16 @@
 import React from 'react';
+import { ArticleInterface } from '@/utils/article.interface';
 
-interface ArticleInterface {
-  id: string;
-  title: string;
-  authors: string;
-  source: string;
-  pubyear: string;
-  doi: string;
-  claim: string;
-  evidence: string;
-}
+// interface ArticleInterface {
+//   id: string;
+//   title: string;
+//   authors: string;
+//   source: string;
+//   pubyear: string;
+//   doi: string;
+//   claim: string;
+//   evidence: string;
+// }
 
 interface ArticleDetailProps {
   article: ArticleInterface;

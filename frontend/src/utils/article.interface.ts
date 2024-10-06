@@ -1,10 +1,10 @@
 export interface ArticleInterface {
-	id: string;
+	id?: string;
 	title: string;
-	authors: string;
+	authors: string[] | string;
 	source: string;
-	pubyear: string;
+	pubyear: number;
 	doi: string;
-	claim: string;
-	evidence: string;
+	claim?: string;
+	evidence?: string;
 }

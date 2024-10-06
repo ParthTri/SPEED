@@ -21,10 +21,20 @@ const Articles: NextPage<ArticlesProps> = ({ articles }) => {
 	const sortedArticles = [...articles].sort((a, b) => {
 		if (!sortConfig) return 0;
 		const { key, direction } = sortConfig;
-		if (a[key] < b[key]) {
+
+		if (
+			a === undefined ||
+			b === undefined ||
+			a?.[key] === undefined ||
+			b?.[key] === undefined
+		) {
+			return 0;
+		}
+
+		if (a?.[key] < b?.[key]) {
 			return direction === "ascending" ? -1 : 1;
 		}
-		if (a[key] > b[key]) {
+		if (a?.[key] > b?.[key]) {
 			return direction === "ascending" ? 1 : -1;
 		}
 		return 0;

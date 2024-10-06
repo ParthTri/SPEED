@@ -21,10 +21,13 @@ export class ArticlesService {
   }
 
   // Additional methods for creating, updating, or deleting articles can go here
-  async addArticle(article: CreateArticleDTO): Promise<boolean> {
+  async addArticle(articles: CreateArticleDTO[]): Promise<boolean> {
     try {
-      const newArticle = new this.articleModel(article);
-      newArticle.save();
+      articles.forEach((article) => {
+        const newArticle = new this.articleModel(article);
+        newArticle.state = 'pending';
+        newArticle.save();
+      });
       return true;
     } catch (e) {
       console.log(e);

@@ -43,6 +43,16 @@ export default function Home() {
 	const sortedArticles = [...articles].sort((a, b) => {
 		if (!sortConfig) return 0;
 		const { key, direction } = sortConfig;
+
+		if (
+			a === undefined ||
+			b === undefined ||
+			a?.[key] === undefined ||
+			b?.[key] === undefined
+		) {
+			return 0;
+		}
+		
 		if (a[key] < b[key]) {
 			return direction === "ascending" ? -1 : 1;
 		}
