@@ -45,7 +45,7 @@ const fetchArticles = async () => {
         <strong>Claim: </strong> {article.claim}<br />
         <strong>Evidence: </strong> {article.evidence}
       </p>
-      <button>Analysis Form</button>
+      <button onClick={() => window.location.href = `/articles/analysis/${(article as any)._id}`}>Analysis Form</button>
       <br /><br />
     </li>
   ));
