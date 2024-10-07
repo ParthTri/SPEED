@@ -20,6 +20,11 @@ export class ArticlesService {
     return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
   }
 
+  async getArticleById(id: string): Promise<Article> {
+    const article = await this.articleModel.findById(id).exec();
+    return article;
+  }
+
   // Additional methods for creating, updating, or deleting articles can go here
   async addArticle(articles: CreateArticleDTO[]): Promise<boolean> {
     try {

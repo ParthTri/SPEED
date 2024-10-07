@@ -30,6 +30,12 @@ export class ArticlesController {
     return this.articlesService.getArticlesByState('approved');
   }
 
+  // Get a single article by ID
+  @Get(':id')
+  async getArticleById(@Param('id') id: string): Promise<Article> {
+    return this.articlesService.getArticleById(id); // Implement this method in your service
+  }
+
   @Post()
   async submitArticle(@Body() article: CreateArticleDTO[]): Promise<boolean> {
     return this.articlesService.addArticle(article);
