@@ -27,7 +27,16 @@ const AnalysisForm = () => {
                     throw new Error("Failed to fetch");
                 }
                 const data = await response.json();
-                return data; // Return single article
+
+                //redirect to home page if article does not have the correct state
+                if (data.state != 'approved') {
+                    window.location.href = '/';
+                }
+                else {
+                    return data; // Return single article
+                }
+                
+                
             } catch (error) {
                 console.error("Error fetching article:", error);
                 return null; // Return null if there's an error
