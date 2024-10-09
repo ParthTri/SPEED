@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDTO } from './createArticle.dto';
@@ -48,19 +56,33 @@ export class ArticlesController {
     return this.articlesService.updateArticleState(id, 'rejected');
   }
 
+  @Get(':id')
+  async getArticleById(@Param('id') id: string): Promise<Article> {
+    const article = await this.articlesService.getArticleById(id);
+    if (!article) {
+      throw new NotFoundException(`Article with ID ${id} not found`);
+    }
+    return article;
+  }
+
   @Post(':id/rate')
-  async submitRating(
-    @Param('id') articleId: string,
+  async rateArticle(
+    @Param('id') id: string,
     @Body() ratingData: SubmitRatingDTO,
-  ): Promise<boolean> {
-    return this.articlesService.submitRating(articleId, ratingData);
+  ) {
+    const result = await this.articlesService.submitRating(id, ratingData);
+    if (!result) {
+      throw new NotFoundException('Article not found');
+    }
+    return result;
   }
 
   @Get(':id/rating')
-  async getArticleRating(@Param('id') articleId: string): Promise<{
-    average_rating: number;
-    total_ratings: number;
-  }> {
-    return this.articlesService.getArticleRating(articleId);
+  async getArticleRating(@Param('id') id: string) {
+    const rating = await this.articlesService.getArticleRating(id);
+    if (!rating) {
+      throw new NotFoundException('Article not found');
+    }
+    return rating;
   }
 }

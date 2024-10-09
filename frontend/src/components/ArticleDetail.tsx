@@ -8,8 +8,8 @@ interface ArticleDetailProps {
 }
 
 interface RatingData {
-  averageRating: number;
-  userRating?: number;
+  average_rating: number;
+  total_ratings: number;
 }
 
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
@@ -20,17 +20,14 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
 
   useEffect(() => {
     fetchRating();
-  }, [article.id]);
+  }, [article._id]); // Change article.id to article._id to match MongoDB
 
   const fetchRating = async () => {
     try {
-      const response = await fetch(`/api/articles/${article.id}/rating`);
+      const response = await fetch(`http://localhost:3000/api/articles/${article._id}/rating`);
       if (!response.ok) throw new Error('Failed to fetch rating');
       const data = await response.json();
       setRatingData(data);
-      if (data.userRating) {
-        setSelectedRating(data.userRating);
-      }
     } catch (err) {
       setError('Failed to load rating');
       console.error(err);
@@ -42,12 +39,15 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
     setError(null);
     
     try {
-      const response = await fetch(`/api/articles/${article.id}/rate`, {
+      const response = await fetch(`http://localhost:3000/api/articles/${article._id}/rate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rating }),
+        body: JSON.stringify({ 
+          rating,
+          user_id: 'user123' 
+        }),
       });
 
       if (!response.ok) {
@@ -65,48 +65,60 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <div className={styles.modalBody}>
-          <h3 className={styles.modalTitle}>{article.title}</h3>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <button className={styles.closeButton} onClick={onClose}>&times;</button>
+        
+        <h2 className={styles.title}>{article.title}</h2>
+        
+        <div className={styles.ratingSection}>
+          <div className={styles.starRating}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                onClick={() => !isSubmitting && handleRate(star)}
+                className={`${styles.star} ${selectedRating >= star ? styles.active : ''}`}
+                disabled={isSubmitting}
+              >
+                ★
+              </button>
+            ))}
+          </div>
           
-          <div className={styles.ratingContainer}>
-            <div className={styles.stars}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => !isSubmitting && handleRate(star)}
-                  className={`${styles.starBtn} ${selectedRating >= star ? styles.selected : ''} ${isSubmitting ? styles.submitting : ''}`}
-                  disabled={isSubmitting}
-                >
-                  ★
-                </button>
-              ))}
+          {ratingData && (
+            <div className={styles.ratingInfo}>
+              <span>Average Rating: {ratingData.average_rating.toFixed(1)} ★</span>
+              <span>Total Ratings: {ratingData.total_ratings}</span>
             </div>
-            {ratingData && (
-              <div className={styles.averageRating}>
-                Average Rating: {ratingData.averageRating.toFixed(1)} ★
-              </div>
-            )}
-            {error && (
-              <p className={styles.errorMessage}>{error}</p>
-            )}
-          </div>
+          )}
+          
+          {error && <p className={styles.error}>{error}</p>}
+        </div>
 
-          <div className={styles.articleDetails}>
-            <p>
-              <strong>Authors:</strong> {article.authors}<br/>
-              <strong>Source:</strong> {article.source}<br/>
-              <strong>Publication Year:</strong> {article.pubyear}<br/>
-              <strong>DOI:</strong> {article.doi}<br/>
-              <strong>Claim:</strong> {article.claim}<br/>
-              <strong>Evidence:</strong> {article.evidence}
-            </p>
+        <div className={styles.details}>
+          <div className={styles.field}>
+            <label>Authors:</label>
+            <span>{article.authors.join(', ')}</span>
           </div>
-          <div className={styles.modalFooter}>
-            <button onClick={onClose} className={styles.closeBtn}>
-              Close
-            </button>
+          
+          <div className={styles.field}>
+            <label>Source:</label>
+            <span>{article.source}</span>
+          </div>
+          
+          <div className={styles.field}>
+            <label>Publication Year:</label>
+            <span>{article.pubyear}</span>
+          </div>
+          
+          <div className={styles.field}>
+            <label>DOI:</label>
+            <span>{article.doi}</span>
+          </div>
+          
+          <div className={styles.field}>
+            <label>Summary:</label>
+            <p>{article.summary}</p>
           </div>
         </div>
       </div>

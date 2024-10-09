@@ -1,0 +1,43 @@
+/* Articles.module.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .table th:hover {
+    background-color: #e9ecef;
+  }
+  
+  .tableRow {
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .tableRow:hover {
+    background-color: #f8f9fa;
+  }

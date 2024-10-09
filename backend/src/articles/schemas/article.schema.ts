@@ -36,7 +36,7 @@ export class Article extends Document {
   @Prop()
   state: string;
 
-  @Prop({ type: [Rating], default: [] })
+  @Prop({ type: [{ user_id: String, rating: Number }], default: [] })
   ratings: Rating[];
 
   @Prop({ default: 0 })

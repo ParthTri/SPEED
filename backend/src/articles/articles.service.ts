@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDTO } from './createArticle.dto';
 import { SubmitRatingDTO } from './rating.dto';
@@ -23,6 +23,29 @@ export class ArticlesService {
   // Method to fetch all articles based on state
   async getArticlesByState(state: string): Promise<Article[]> {
     return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
+  }
+
+  async getArticleById(id: string): Promise<Article> {
+    try {
+      // Validate if the id is a valid MongoDB ObjectId
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException('Invalid article ID');
+      }
+
+      const article = await this.articleModel.findById(id).exec();
+      if (!article) {
+        throw new NotFoundException(`Article with ID ${id} not found`);
+      }
+      return article;
+    } catch (error) {
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
+      throw new Error(`Error finding article: ${error.message}`);
+    }
   }
 
   // Additional methods for creating, updating, or deleting articles can go here
@@ -56,22 +79,43 @@ export class ArticlesService {
     }
   }
 
+  async getArticleRating(articleId: string) {
+    try {
+      const article = await this.articleModel.findById(articleId);
+      if (!article) {
+        return null;
+      }
+
+      return {
+        average_rating: article.average_rating || 0,
+        total_ratings: article.ratings?.length || 0,
+      };
+    } catch (error) {
+      console.error('Error getting article rating:', error);
+      return null;
+    }
+  }
+
   async submitRating(
     articleId: string,
     ratingData: SubmitRatingDTO,
   ): Promise<boolean> {
     try {
-      const article = await this.articleModel.findById(articleId);
-
-      if (!article) {
-        throw new NotFoundException('Article not found');
-      }
-
       if (ratingData.rating < 1 || ratingData.rating > 5) {
         throw new BadRequestException('Rating must be between 1 and 5');
       }
 
-      // Check if user has already rated
+      const article = await this.articleModel.findById(articleId);
+      if (!article) {
+        return false;
+      }
+
+      // Initialize ratings array if it doesn't exist
+      if (!article.ratings) {
+        article.ratings = [];
+      }
+
+      // Find existing rating by this user
       const existingRatingIndex = article.ratings.findIndex(
         (r) => r.user_id === ratingData.user_id,
       );
@@ -94,24 +138,8 @@ export class ArticlesService {
       await article.save();
       return true;
     } catch (error) {
-      console.error(error);
+      console.error('Error submitting rating:', error);
       return false;
     }
-  }
-
-  async getArticleRating(articleId: string): Promise<{
-    average_rating: number;
-    total_ratings: number;
-  }> {
-    const article = await this.articleModel.findById(articleId);
-
-    if (!article) {
-      throw new NotFoundException('Article not found');
-    }
-
-    return {
-      average_rating: article.average_rating,
-      total_ratings: article.ratings.length,
-    };
   }
 }
