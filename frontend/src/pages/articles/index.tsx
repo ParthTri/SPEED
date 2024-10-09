@@ -94,7 +94,7 @@ export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
 	try {
 		// Fetch data from your backend API
 		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/articles`
+			"http://localhost:3000/api/articles"
 		);
 
 		// Check if the response was successful

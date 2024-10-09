@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDTO } from './createArticle.dto';
+import { SubmitRatingDTO } from './rating.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -49,5 +54,64 @@ export class ArticlesService {
       console.log(e);
       return false;
     }
+  }
+
+  async submitRating(
+    articleId: string,
+    ratingData: SubmitRatingDTO,
+  ): Promise<boolean> {
+    try {
+      const article = await this.articleModel.findById(articleId);
+
+      if (!article) {
+        throw new NotFoundException('Article not found');
+      }
+
+      if (ratingData.rating < 1 || ratingData.rating > 5) {
+        throw new BadRequestException('Rating must be between 1 and 5');
+      }
+
+      // Check if user has already rated
+      const existingRatingIndex = article.ratings.findIndex(
+        (r) => r.user_id === ratingData.user_id,
+      );
+
+      if (existingRatingIndex !== -1) {
+        // Update existing rating
+        article.ratings[existingRatingIndex].rating = ratingData.rating;
+      } else {
+        // Add new rating
+        article.ratings.push({
+          user_id: ratingData.user_id,
+          rating: ratingData.rating,
+        });
+      }
+
+      // Calculate new average
+      const totalRating = article.ratings.reduce((sum, r) => sum + r.rating, 0);
+      article.average_rating = totalRating / article.ratings.length;
+
+      await article.save();
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  async getArticleRating(articleId: string): Promise<{
+    average_rating: number;
+    total_ratings: number;
+  }> {
+    const article = await this.articleModel.findById(articleId);
+
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+
+    return {
+      average_rating: article.average_rating,
+      total_ratings: article.ratings.length,
+    };
   }
 }

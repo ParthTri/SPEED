@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDTO } from './createArticle.dto';
+import { SubmitRatingDTO } from './rating.dto';
 
 @Controller('api/articles')
 export class ArticlesController {
@@ -45,5 +46,21 @@ export class ArticlesController {
   @Patch(':id/reject')
   async rejectArticle(@Param('id') id: string): Promise<boolean> {
     return this.articlesService.updateArticleState(id, 'rejected');
+  }
+
+  @Post(':id/rate')
+  async submitRating(
+    @Param('id') articleId: string,
+    @Body() ratingData: SubmitRatingDTO,
+  ): Promise<boolean> {
+    return this.articlesService.submitRating(articleId, ratingData);
+  }
+
+  @Get(':id/rating')
+  async getArticleRating(@Param('id') articleId: string): Promise<{
+    average_rating: number;
+    total_ratings: number;
+  }> {
+    return this.articlesService.getArticleRating(articleId);
   }
 }

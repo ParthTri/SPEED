@@ -2,6 +2,15 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
+export class Rating {
+  @Prop({ required: true })
+  user_id: string;
+
+  @Prop({ required: true, min: 1, max: 5 })
+  rating: number;
+}
+
+@Schema()
 export class Article extends Document {
   @Prop()
   title: string;
@@ -26,6 +35,12 @@ export class Article extends Document {
 
   @Prop()
   state: string;
+
+  @Prop({ type: [Rating], default: [] })
+  ratings: Rating[];
+
+  @Prop({ default: 0 })
+  average_rating: number;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

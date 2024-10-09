@@ -1,30 +1,100 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArticleInterface } from '@/utils/article.interface';
-
-// interface ArticleInterface {
-//   id: string;
-//   title: string;
-//   authors: string;
-//   source: string;
-//   pubyear: string;
-//   doi: string;
-//   claim: string;
-//   evidence: string;
-// }
+import styles from '../styles/ArticleDetail.module.scss';
 
 interface ArticleDetailProps {
   article: ArticleInterface;
   onClose: () => void;
 }
 
+interface RatingData {
+  averageRating: number;
+  userRating?: number;
+}
+
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
+  const [ratingData, setRatingData] = useState<RatingData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number>(0);
+
+  useEffect(() => {
+    fetchRating();
+  }, [article.id]);
+
+  const fetchRating = async () => {
+    try {
+      const response = await fetch(`/api/articles/${article.id}/rating`);
+      if (!response.ok) throw new Error('Failed to fetch rating');
+      const data = await response.json();
+      setRatingData(data);
+      if (data.userRating) {
+        setSelectedRating(data.userRating);
+      }
+    } catch (err) {
+      setError('Failed to load rating');
+      console.error(err);
+    }
+  };
+
+  const handleRate = async (rating: number) => {
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`/api/articles/${article.id}/rate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rating }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit rating');
+      }
+
+      setSelectedRating(rating);
+      await fetchRating();
+    } catch (err) {
+      setError('Failed to submit rating');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div className="mt-3 text-center">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">{article.title}</h3>
-          <div className="mt-2 px-7 py-3">
-            <p className="text-sm text-gray-500">
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <div className={styles.modalBody}>
+          <h3 className={styles.modalTitle}>{article.title}</h3>
+          
+          <div className={styles.ratingContainer}>
+            <div className={styles.stars}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => !isSubmitting && handleRate(star)}
+                  className={`${styles.starBtn} ${selectedRating >= star ? styles.selected : ''} ${isSubmitting ? styles.submitting : ''}`}
+                  disabled={isSubmitting}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+            {ratingData && (
+              <div className={styles.averageRating}>
+                Average Rating: {ratingData.averageRating.toFixed(1)} ★
+              </div>
+            )}
+            {error && (
+              <p className={styles.errorMessage}>{error}</p>
+            )}
+          </div>
+
+          <div className={styles.articleDetails}>
+            <p>
               <strong>Authors:</strong> {article.authors}<br/>
               <strong>Source:</strong> {article.source}<br/>
               <strong>Publication Year:</strong> {article.pubyear}<br/>
@@ -33,11 +103,8 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
               <strong>Evidence:</strong> {article.evidence}
             </p>
           </div>
-          <div className="items-center px-4 py-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            >
+          <div className={styles.modalFooter}>
+            <button onClick={onClose} className={styles.closeBtn}>
               Close
             </button>
           </div>
