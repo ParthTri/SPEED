@@ -56,4 +56,25 @@ export class ArticlesService {
       return false;
     }
   }
+
+  // Method to update the claim and evidence of an article
+  async updateClaimAndEvidence(
+    articleId: string,
+    claim: string,
+    evidence: string,
+  ): Promise<boolean> {
+    try {
+      await this.articleModel
+        .findByIdAndUpdate(
+          articleId,
+          { $set: { claim, evidence } },
+          { new: true },
+        )
+        .exec();
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
 }

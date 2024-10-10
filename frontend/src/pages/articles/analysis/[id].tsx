@@ -6,6 +6,9 @@ const AnalysisForm = () => {
     const [article, setArticle] = useState<ArticleInterface>();
     const router = useRouter();
     const { id } = router.query; // Get the dynamic ID from the URL
+    const [claim, setClaim] = useState('');
+    const [evidence, setEvidence] = useState('');
+
 
     useEffect(() => {
         const getArticle = async () => {
@@ -18,6 +21,16 @@ const AnalysisForm = () => {
         };
         getArticle();
     }, [id]);
+
+    // Function to handle claim input changes
+    const handleClaimChange = (event) => {
+        setClaim(event.target.value);
+    };
+
+    // Function to handle evidence input changes
+    const handleEvidenceChange = (event) => {
+        setEvidence(event.target.value);
+    };
 
     //fetch article from api
     const fetchArticle = async () => {
@@ -46,6 +59,44 @@ const AnalysisForm = () => {
         return null;
     };
 
+    // Function to handle approve articles with claim and evidence update
+    const updateArticle = async (id: string, claim: string, evidence: string) => {
+    try {
+        // Create the request body
+        const requestBody = { claim, evidence };
+
+        const response = await fetch(`http://localhost:3000/api/articles/${id}/update-claim-evidence`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json', // Specify the content type
+        },
+        body: JSON.stringify(requestBody), // Convert the body to JSON
+        });
+
+        if (response.ok) {
+        console.log('Article approved and updated successfully');
+        } else {
+        console.error('Failed to approve article');
+        }
+    } catch (error) {
+        console.error('Error approving article:', error);
+    }
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault(); // Prevent the default form submission
+    
+        // Check if id is a string before passing it to updateArticle
+        if (typeof id === 'string') {
+            updateArticle(id, claim, evidence);
+        } else {
+            console.error("ID is not a valid string");
+        }
+    
+        console.log("Submitted query:", claim, evidence); // Use the input value stored in state
+    };
+
+    //display current article details
     const displayArticle = (article: ArticleInterface) => (
         <div key={(article as any)._id}>
             <h2>Submission details</h2>
@@ -61,16 +112,19 @@ const AnalysisForm = () => {
         </div>
     );
 
+    //input form for article analysis
     const analysisForm = () => (
         <div>
             <h2>Analysis Form</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 Claim:<br></br>
                 <textarea
-                style={{ width: '300px', height: '40px',  resize: 'none' }}/><br></br>
+                style={{ width: '300px', height: '40px',  resize: 'none' }}
+                onChange={handleClaimChange}/><br></br>
                 <br></br>Evidence:<br></br>   
                 <textarea
-                style={{ width: '300px', height: '40px',  resize: 'none' }}/><br></br>
+                style={{ width: '300px', height: '40px',  resize: 'none' }}
+                onChange={handleEvidenceChange}/><br></br>
                 <br></br>
                 <button type="submit">Submit Article</button>
             </form>

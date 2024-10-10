@@ -26,6 +26,12 @@ export class Article extends Document {
 
   @Prop()
   state: string;
+
+  @Prop()
+  claim: string;
+
+  @Prop()
+  evidence: string;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);

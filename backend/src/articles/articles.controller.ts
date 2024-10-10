@@ -52,4 +52,13 @@ export class ArticlesController {
   async rejectArticle(@Param('id') id: string): Promise<boolean> {
     return this.articlesService.updateArticleState(id, 'rejected');
   }
+
+  @Patch(':id/update-claim-evidence')
+  async updateClaimAndEvidence(
+    @Param('id') id: string,
+    @Body('claim') claim: string,
+    @Body('evidence') evidence: string,
+  ): Promise<boolean> {
+    return this.articlesService.updateClaimAndEvidence(id, claim, evidence);
+  }
 }
