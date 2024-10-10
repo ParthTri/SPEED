@@ -20,6 +20,7 @@ export class ArticlesService {
     return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
   }
 
+  // Method to fetch a single article from id
   async getArticleById(id: string): Promise<Article> {
     const article = await this.articleModel.findById(id).exec();
     return article;

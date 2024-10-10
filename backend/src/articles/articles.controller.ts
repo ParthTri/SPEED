@@ -33,7 +33,7 @@ export class ArticlesController {
   // Get a single article by ID
   @Get(':id')
   async getArticleById(@Param('id') id: string): Promise<Article> {
-    return this.articlesService.getArticleById(id); // Implement this method in your service
+    return this.articlesService.getArticleById(id);
   }
 
   @Post()

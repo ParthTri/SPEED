@@ -19,6 +19,7 @@ const AnalysisForm = () => {
         getArticle();
     }, [id]);
 
+    //fetch article from api
     const fetchArticle = async () => {
         if (id) {
             try {
@@ -47,17 +48,43 @@ const AnalysisForm = () => {
 
     const displayArticle = (article: ArticleInterface) => (
         <div key={(article as any)._id}>
-            <h2>{article.title}</h2>
-            <button>Submit Article</button>
+            <h2>Submission details</h2>
+            <p>
+                <strong>Title: </strong>{article.title}<br />
+                <strong>Authors: </strong> {article.authors}<br />
+                <strong>Source: </strong> {article.source}<br />
+                <strong>Publication Year: </strong> {article.pubyear}<br />
+                <strong>DOI: </strong> {article.doi}<br />
+                <strong>Claim: </strong> {article.claim}<br />
+                <strong>Evidence: </strong> {article.evidence}
+            </p>
         </div>
     );
 
-    return (
-        <div className="container">
-            <h1>Analysis Form</h1>
-            <ul>{article ? displayArticle(article) : <li>Loading...</li>}</ul>
+    const analysisForm = () => (
+        <div>
+            <h2>Analysis Form</h2>
+            <form>
+                Claim:<br></br>
+                <textarea
+                style={{ width: '300px', height: '40px',  resize: 'none' }}/><br></br>
+                <br></br>Evidence:<br></br>   
+                <textarea
+                style={{ width: '300px', height: '40px',  resize: 'none' }}/><br></br>
+                <br></br>
+                <button type="submit">Submit Article</button>
+            </form>
         </div>
     );
+    
+    return (
+        <div className="container">
+            <h1>Article Analysis</h1>
+            {article ? displayArticle(article) : <p>Loading...</p>}
+            {analysisForm()}
+        </div>
+    );
+    
 };
 
 export default AnalysisForm;
