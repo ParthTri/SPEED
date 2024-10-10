@@ -75,6 +75,18 @@ const AnalysisForm = () => {
 
         if (response.ok) {
         console.log('Article approved and updated successfully');
+        try {
+            const response = await fetch(`http://localhost:3000/api/articles/${id}/submitted`, {
+              method: 'PATCH',
+            });
+            if (response.ok) {
+              window.location.href = '/articles/analysis'
+            } else {
+              console.error('Failed to approve article');
+            }
+          } catch (error) {
+            console.error('Error accepting article:', error);
+          }
         } else {
         console.error('Failed to approve article');
         }
@@ -82,6 +94,11 @@ const AnalysisForm = () => {
         console.error('Error approving article:', error);
     }
     };
+
+    // Function to handle approve articles
+const approveArticle = async (id: string) => {
+
+  };
 
     const handleSubmit = (event) => {
         event.preventDefault(); // Prevent the default form submission
@@ -93,7 +110,7 @@ const AnalysisForm = () => {
             console.error("ID is not a valid string");
         }
     
-        console.log("Submitted query:", claim, evidence); // Use the input value stored in state
+        console.log("Submitted query:", claim, evidence);
     };
 
     //display current article details
@@ -120,11 +137,13 @@ const AnalysisForm = () => {
                 Claim:<br></br>
                 <textarea
                 style={{ width: '300px', height: '40px',  resize: 'none' }}
-                onChange={handleClaimChange}/><br></br>
+                onChange={handleClaimChange}
+                required/><br></br>
                 <br></br>Evidence:<br></br>   
                 <textarea
                 style={{ width: '300px', height: '40px',  resize: 'none' }}
-                onChange={handleEvidenceChange}/><br></br>
+                onChange={handleEvidenceChange}
+                required/><br></br>
                 <br></br>
                 <button type="submit">Submit Article</button>
             </form>

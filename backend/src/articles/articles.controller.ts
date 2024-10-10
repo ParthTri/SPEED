@@ -53,6 +53,12 @@ export class ArticlesController {
     return this.articlesService.updateArticleState(id, 'rejected');
   }
 
+  //set article to submitted
+  @Patch(':id/submitted')
+  async setArticleSubmitted(@Param('id') id: string): Promise<boolean> {
+    return this.articlesService.updateArticleState(id, 'submitted');
+  }
+
   @Patch(':id/update-claim-evidence')
   async updateClaimAndEvidence(
     @Param('id') id: string,
