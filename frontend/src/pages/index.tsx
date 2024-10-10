@@ -6,7 +6,7 @@ import { ArticleInterface } from "@/utils/article.interface";
 // API call function
 const fetchArticles = async () => {
 	try {
-		const response = await fetch("http://localhost:3000/api/articles"); // Full API URL for backend
+		const response = await fetch("http://localhost:3000/api/articles/submitted"); // Full API URL for backend
 		if (!response.ok) {
 			throw new Error("Failed to fetch");
 		}

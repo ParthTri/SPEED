@@ -30,6 +30,12 @@ export class ArticlesController {
     return this.articlesService.getArticlesByState('approved');
   }
 
+  //get all articles with submitted state
+  @Get('submitted')
+  async getSubmittedArticles(): Promise<Article[]> {
+    return this.articlesService.getArticlesByState('submitted');
+  }
+
   // Get a single article by ID
   @Get(':id')
   async getArticleById(@Param('id') id: string): Promise<Article> {

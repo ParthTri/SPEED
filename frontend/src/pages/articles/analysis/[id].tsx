@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { ArticleInterface } from "@/utils/article.interface";
 
@@ -11,28 +11,7 @@ const AnalysisForm = () => {
 
 
     useEffect(() => {
-        const getArticle = async () => {
-            if (id) {  // Check if id is defined
-                const fetchedArticle = await fetchArticle();
-                if (fetchedArticle) {
-                    setArticle(fetchedArticle); // Set the fetched article
-                }
-            }
-        };
-        getArticle();
-    }, [id]);
-
-    // Function to handle claim input changes
-    const handleClaimChange = (event) => {
-        setClaim(event.target.value);
-    };
-
-    // Function to handle evidence input changes
-    const handleEvidenceChange = (event) => {
-        setEvidence(event.target.value);
-    };
-
-    //fetch article from api
+            //fetch article from api
     const fetchArticle = async () => {
         if (id) {
             try {
@@ -59,6 +38,27 @@ const AnalysisForm = () => {
         return null;
     };
 
+        const getArticle = async () => {
+            if (id) {  // Check if id is defined
+                const fetchedArticle = await fetchArticle();
+                if (fetchedArticle) {
+                    setArticle(fetchedArticle); // Set the fetched article
+                }
+            }
+        };
+        getArticle();
+    }, [id]); // Add fetchArticle to the dependencies
+
+    // Function to handle claim input changes
+    const handleClaimChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setClaim(event.target.value);
+    };
+
+    // Function to handle evidence input changes
+    const handleEvidenceChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setEvidence(event.target.value);
+    };
+
     // Function to handle approve articles with claim and evidence update
     const updateArticle = async (id: string, claim: string, evidence: string) => {
     try {
@@ -73,6 +73,7 @@ const AnalysisForm = () => {
         body: JSON.stringify(requestBody), // Convert the body to JSON
         });
 
+        //if response is ok, set article state to submitted
         if (response.ok) {
         console.log('Article approved and updated successfully');
         try {
@@ -95,17 +96,13 @@ const AnalysisForm = () => {
     }
     };
 
-    // Function to handle approve articles
-const approveArticle = async (id: string) => {
-
-  };
-
-    const handleSubmit = (event) => {
+    //handle form submission
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevent the default form submission
     
         // Check if id is a string before passing it to updateArticle
         if (typeof id === 'string') {
-            updateArticle(id, claim, evidence);
+            updateArticle(id, claim, evidence); //update article fields
         } else {
             console.error("ID is not a valid string");
         }
