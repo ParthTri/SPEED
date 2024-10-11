@@ -10,7 +10,9 @@ const AnalysisQueuePage = () => {
 var current = 1
 
 const analysisNavigate = (id: any) => {
-  router.push(`/articles/analysis/${id}`);
+  if (typeof window !== "undefined") {
+    router.push(`/articles/analysis/${id}`);
+  }
 };
 
 
