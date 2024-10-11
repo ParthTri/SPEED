@@ -1,20 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ArticleInterface } from "@/utils/article.interface";
-import { useRouter } from "next/router";
-
 
 const AnalysisQueuePage = () => {
-  const router = useRouter();
-
 
 var current = 1
-
-const analysisNavigate = (id: any) => {
-  if (typeof window !== "undefined") {
-    router.push(`/articles/analysis/${id}`);
-  }
-};
-
 
   // API call function
 const fetchArticles = async () => {
@@ -53,8 +42,11 @@ const fetchArticles = async () => {
         <strong>Source: </strong> {article.source}<br />
         <strong>Publication Year: </strong> {article.pubyear}<br />
         <strong>DOI: </strong> {article.doi}<br />
+        <strong>Claim: </strong> {article.claim}<br />
+        <strong>Evidence: </strong> {article.evidence}
       </p>
-      <button onClick={() => analysisNavigate(article._id)}>Analysis Form</button><br /><br />
+      <button onClick={() => window.location.href = `/articles/analysis/${(article as any)._id}`}>Analysis Form</button>
+      <br /><br />
     </li>
   ));
 
