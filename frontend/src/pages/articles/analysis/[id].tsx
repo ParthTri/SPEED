@@ -2,6 +2,7 @@ import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { ArticleInterface } from "@/utils/article.interface";
 
+
 const AnalysisForm = () => {
     const [article, setArticle] = useState<ArticleInterface>();
     const router = useRouter();
@@ -81,7 +82,7 @@ const AnalysisForm = () => {
               method: 'PATCH',
             });
             if (response.ok) {
-              window.location.href = '/articles/analysis'
+              router.push('/articles/analysis')
             } else {
               console.error('Failed to approve article');
             }
@@ -120,8 +121,6 @@ const AnalysisForm = () => {
                 <strong>Source: </strong> {article.source}<br />
                 <strong>Publication Year: </strong> {article.pubyear}<br />
                 <strong>DOI: </strong> {article.doi}<br />
-                <strong>Claim: </strong> {article.claim}<br />
-                <strong>Evidence: </strong> {article.evidence}
             </p>
         </div>
     );
