@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Article } from './schemas/article.schema';
 import { CreateArticleDTO } from './createArticle.dto';
@@ -22,6 +22,11 @@ export class ArticlesController {
   @Get('rejected')
   async getRejectedArticles(): Promise<Article[]> {
     return this.articlesService.getArticlesByState('approved');
+  }
+
+  @Get('search') // Ensure the 'search' route is properly defined
+  async searchArticles(@Query('term') searchTerm: string) {
+    return this.articlesService.searchArticles(searchTerm);
   }
 
   //get all articles with approved state

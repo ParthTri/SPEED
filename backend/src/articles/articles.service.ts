@@ -6,6 +6,7 @@ import { CreateArticleDTO } from './createArticle.dto';
 
 @Injectable()
 export class ArticlesService {
+  [x: string]: any;
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
@@ -18,6 +19,23 @@ export class ArticlesService {
   // Method to fetch all articles based on state
   async getArticlesByState(state: string): Promise<Article[]> {
     return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
+  }
+
+  // Method to search articles by a search term
+  async searchArticles(searchTerm: string): Promise<Article[]> {
+    const searchRegex = new RegExp(searchTerm, 'i'); // Create a case-insensitive regex for the search term
+    return this.articleModel
+      .find({
+        $or: [
+          { title: searchRegex },
+          { authors: searchRegex },
+          { source: searchRegex },
+          { doi: searchRegex },
+          { claim: searchRegex },
+          { evidence: searchRegex },
+        ],
+      })
+      .exec();
   }
 
   // Additional methods for creating, updating, or deleting articles can go here

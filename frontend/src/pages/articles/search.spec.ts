@@ -1,5 +1,6 @@
+import { describe, it, expect } from 'vitest';
 import data from '../../utils/dummydata'; // Adjust the relative path
-import { searchArticles } from '../src/articles/search'; // Path to your search logic
+import { searchArticles } from "../../utils/search"; // Adjusted to relative path
 
 describe('Search Articles with dummy data', () => {
   it('should return articles matching the search term in the title', () => {
