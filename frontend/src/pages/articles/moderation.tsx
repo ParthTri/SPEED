@@ -79,6 +79,8 @@ const rejectArticle = async (id: string) => {
         <strong>Source: </strong> {article.source}<br />
         <strong>Publication Year: </strong> {article.pubyear}<br />
         <strong>DOI: </strong> {article.doi}<br />
+        <strong>Claim: </strong> {article.claim}<br />
+        <strong>Evidence: </strong> {article.evidence}
       </p>
       <button onClick={() => approveArticle((article as any)._id)}>Accept</button>
       <button onClick={() => rejectArticle((article as any)._id)}>Reject</button>
