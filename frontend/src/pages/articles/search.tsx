@@ -13,7 +13,7 @@ const SearchPage = () => {
     setError(null);
   
     try {
-      const response = await fetch(`/api/articles/search?term=${searchTerm}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/search?term=${searchTerm}`);
       if (!response.ok) {
         throw new Error("Failed to fetch articles");
       }

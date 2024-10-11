@@ -21,7 +21,7 @@ export class AppService {
 
   // Search articles based on a search term
   async searchArticles(searchTerm: string): Promise<Article[]> {
-    const searchRegex = new RegExp(searchTerm, 'i'); // Create a case-insensitive regex for the search term
+    const searchRegex = new RegExp(searchTerm, 'i'); // Case-insensitive search term
     return this.articleModel
       .find({
         $or: [
@@ -33,6 +33,6 @@ export class AppService {
           { evidence: searchRegex },
         ],
       })
-      .exec(); // Search in multiple fields: title, authors, source, doi, etc.
+      .exec(); // Perform search in multiple fields
   }
 }
