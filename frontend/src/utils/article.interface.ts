@@ -11,4 +11,6 @@ export interface ArticleInterface {
 		rating: number;
 	}>;
 	average_rating?: number;
+	claim?: string;
+	evidence?: string;
 }
