@@ -8,7 +8,7 @@ var current = 1
   // API call function
 const fetchArticles = async () => {
 	try {
-		const response = await fetch("http://localhost:3000/api/articles/approved"); // fetch all approved articles
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/approved`); // fetch all approved articles
 		if (!response.ok) {
 			throw new Error("Failed to fetch");
 		}
@@ -45,7 +45,7 @@ const fetchArticles = async () => {
         <strong>Claim: </strong> {article.claim}<br />
         <strong>Evidence: </strong> {article.evidence}
       </p>
-      <button onClick={() => window.location.href = `/articles/analysis/${(article as any)._id}`}>Analysis Form</button>
+      <button onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/articles/analysis/${(article as any)._id}`}>Analysis Form</button>
       <br /><br />
     </li>
   ));

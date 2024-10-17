@@ -15,7 +15,7 @@ const AnalysisForm = () => {
     const fetchArticle = async () => {
         if (id) {
             try {
-                const response = await fetch(`http://localhost:3000/api/articles/${id}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch");
                 }
@@ -65,7 +65,7 @@ const AnalysisForm = () => {
         // Create the request body
         const requestBody = { claim, evidence };
 
-        const response = await fetch(`http://localhost:3000/api/articles/${id}/update-claim-evidence`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/update-claim-evidence`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json', // Specify the content type
@@ -77,7 +77,7 @@ const AnalysisForm = () => {
         if (response.ok) {
         console.log('Article approved and updated successfully');
         try {
-            const response = await fetch(`http://localhost:3000/api/articles/${id}/submitted`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/submitted`, {
               method: 'PATCH',
             });
             if (response.ok) {
