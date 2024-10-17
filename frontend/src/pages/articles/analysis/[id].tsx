@@ -9,111 +9,85 @@ const AnalysisForm = () => {
     const [claim, setClaim] = useState('');
     const [evidence, setEvidence] = useState('');
 
-
     useEffect(() => {
-            //fetch article from api
-    const fetchArticle = async () => {
-        if (id) {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch");
-                }
-                const data = await response.json();
+        const fetchArticle = async () => {
+            if (id && typeof id === 'string') {
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch article");
+                    }
+                    const data = await response.json();
 
-                //redirect to home page if article does not have the correct state
-                if (data.state != 'approved') {
-                    window.location.href = '/';
-                }
-                else {
-                    return data; // Return single article
-                }
-                
-                
-            } catch (error) {
-                console.error("Error fetching article:", error);
-                return null; // Return null if there's an error
-            }
-        }
-        return null;
-    };
-
-        const getArticle = async () => {
-            if (id) {  // Check if id is defined
-                const fetchedArticle = await fetchArticle();
-                if (fetchedArticle) {
-                    setArticle(fetchedArticle); // Set the fetched article
+                    // Redirect to home page if article does not have the correct state
+                    if (data.state !== 'approved') {
+                        router.push('/'); // Use router.push instead of window.location.href
+                    } else {
+                        setArticle(data); // Set the fetched article
+                    }
+                } catch (error) {
+                    console.error("Error fetching article:", error);
                 }
             }
         };
-        getArticle();
-    }, [id]); // Add fetchArticle to the dependencies
 
-    // Function to handle claim input changes
+        fetchArticle();
+    }, [id, router]); // Add router to dependencies
+
     const handleClaimChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setClaim(event.target.value);
     };
 
-    // Function to handle evidence input changes
     const handleEvidenceChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setEvidence(event.target.value);
     };
 
-    // Function to handle approve articles with claim and evidence update
     const updateArticle = async (id: string, claim: string, evidence: string) => {
-    try {
-        // Create the request body
-        const requestBody = { claim, evidence };
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/update-claim-evidence`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json', // Specify the content type
-        },
-        body: JSON.stringify(requestBody), // Convert the body to JSON
-        });
-
-        //if response is ok, set article state to submitted
-        if (response.ok) {
-        console.log('Article approved and updated successfully');
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/submitted`, {
-              method: 'PATCH',
+            const requestBody = { claim, evidence };
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/update-claim-evidence`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
             });
+
             if (response.ok) {
-              window.location.href = '/articles/analysis'
+                console.log('Article updated successfully');
+                // Proceed to submit the article
+                const submitResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/submitted`, {
+                    method: 'PATCH',
+                });
+                if (submitResponse.ok) {
+                    router.push('/articles/analysis'); // Use router.push instead of window.location.href
+                } else {
+                    console.error('Failed to approve article');
+                }
             } else {
-              console.error('Failed to approve article');
+                console.error('Failed to update article');
             }
-          } catch (error) {
-            console.error('Error accepting article:', error);
-          }
-        } else {
-        console.error('Failed to approve article');
+        } catch (error) {
+            console.error('Error updating article:', error);
         }
-    } catch (error) {
-        console.error('Error approving article:', error);
-    }
     };
 
-    //handle form submission
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Prevent the default form submission
-    
-        // Check if id is a string before passing it to updateArticle
+        event.preventDefault();
+
         if (typeof id === 'string') {
-            updateArticle(id, claim, evidence); //update article fields
+            updateArticle(id, claim, evidence);
         } else {
             console.error("ID is not a valid string");
         }
-    
+
         console.log("Submitted query:", claim, evidence);
     };
 
-    //display current article details
     const displayArticle = (article: ArticleInterface) => (
         <div key={(article as any)._id}>
-            <h2>Submission details</h2>
+            <h2>Submission Details</h2>
             <p>
                 <strong>Title: </strong>{article.title}<br />
                 <strong>Authors: </strong> {article.authors}<br />
@@ -126,27 +100,29 @@ const AnalysisForm = () => {
         </div>
     );
 
-    //input form for article analysis
     const analysisForm = () => (
         <div>
             <h2>Analysis Form</h2>
             <form onSubmit={handleSubmit}>
-                Claim:<br></br>
+                Claim:<br />
                 <textarea
-                style={{ width: '300px', height: '40px',  resize: 'none' }}
-                onChange={handleClaimChange}
-                required/><br></br>
-                <br></br>Evidence:<br></br>   
+                    style={{ width: '300px', height: '40px', resize: 'none' }}
+                    onChange={handleClaimChange}
+                    required
+                /><br />
+                <br />
+                Evidence:<br />
                 <textarea
-                style={{ width: '300px', height: '40px',  resize: 'none' }}
-                onChange={handleEvidenceChange}
-                required/><br></br>
-                <br></br>
+                    style={{ width: '300px', height: '40px', resize: 'none' }}
+                    onChange={handleEvidenceChange}
+                    required
+                /><br />
+                <br />
                 <button type="submit">Submit Article</button>
             </form>
         </div>
     );
-    
+
     return (
         <div className="container">
             <h1>Article Analysis</h1>
@@ -154,7 +130,6 @@ const AnalysisForm = () => {
             {analysisForm()}
         </div>
     );
-    
 };
 
 export default AnalysisForm;

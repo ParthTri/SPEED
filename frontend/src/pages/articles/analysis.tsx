@@ -1,38 +1,41 @@
 import { useEffect, useState } from 'react';
 import { ArticleInterface } from "@/utils/article.interface";
+import { useRouter } from 'next/router'; // Import useRouter
 
 const AnalysisQueuePage = () => {
+  var current = 1;
 
-var current = 1
+  // Initialize router
+  const router = useRouter(); // Use the router
 
   // API call function
-const fetchArticles = async () => {
-	try {
-		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/approved`); // fetch all approved articles
-		if (!response.ok) {
-			throw new Error("Failed to fetch");
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		console.error("Error fetching articles:", error);
-		return null; // Return null if there's an error
-	}
-};
+  const fetchArticles = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/approved`); // fetch all approved articles
+      if (!response.ok) {
+        throw new Error("Failed to fetch");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      return null; // Return null if there's an error
+    }
+  };
 
   const [articles, setArticles] = useState<ArticleInterface[]>([]);
 
-	useEffect(() => {
-		const getArticles = async () => {
-			const fetchedArticles = await fetchArticles();
-			if (fetchedArticles) {
-				setArticles(fetchedArticles);
-			}
-		};
-		getArticles();
-	}, []);
+  useEffect(() => {
+    const getArticles = async () => {
+      const fetchedArticles = await fetchArticles();
+      if (fetchedArticles) {
+        setArticles(fetchedArticles);
+      }
+    };
+    getArticles();
+  }, []);
 
-  //list of articles that have been submitted
+  // List of articles that have been submitted
   const queueList = articles.map((article) => (
     <li key={(article as any)._id}>
       <p><strong>Submission{' '+current++}</strong></p>
@@ -45,7 +48,7 @@ const fetchArticles = async () => {
         <strong>Claim: </strong> {article.claim}<br />
         <strong>Evidence: </strong> {article.evidence}
       </p>
-      <button onClick={() => window.location.href = `/articles/analysis/${(article as any)._id}`}>Analysis Form</button>
+      <button onClick={() => router.push(`/articles/analysis/${(article as any)._id}`)}>Analysis Form</button> {/* Use router.push */}
       <br /><br />
     </li>
   ));
