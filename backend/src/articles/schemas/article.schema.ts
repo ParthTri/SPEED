@@ -36,6 +36,11 @@ export class Article extends Document {
   @Prop()
   state: string;
 
+  @Prop()
+  claim: string;
+
+  @Prop()
+  evidence: string;
   @Prop({ type: [{ user_id: String, rating: Number }], default: [] })
   ratings: Rating[];
 

@@ -39,6 +39,12 @@ export class ArticlesController {
     return this.articlesService.getArticlesByState('approved');
   }
 
+  //get all articles with submitted state
+  @Get('submitted')
+  async getSubmittedArticles(): Promise<Article[]> {
+    return this.articlesService.getArticlesByState('submitted');
+  }
+
   @Post()
   async submitArticle(@Body() article: CreateArticleDTO[]): Promise<boolean> {
     return this.articlesService.addArticle(article);
@@ -54,6 +60,21 @@ export class ArticlesController {
   @Patch(':id/reject')
   async rejectArticle(@Param('id') id: string): Promise<boolean> {
     return this.articlesService.updateArticleState(id, 'rejected');
+  }
+
+  //set article to submitted
+  @Patch(':id/submitted')
+  async setArticleSubmitted(@Param('id') id: string): Promise<boolean> {
+    return this.articlesService.updateArticleState(id, 'submitted');
+  }
+
+  @Patch(':id/update-claim-evidence')
+  async updateClaimAndEvidence(
+    @Param('id') id: string,
+    @Body('claim') claim: string,
+    @Body('evidence') evidence: string,
+  ): Promise<boolean> {
+    return this.articlesService.updateClaimAndEvidence(id, claim, evidence);
   }
 
   @Get(':id')

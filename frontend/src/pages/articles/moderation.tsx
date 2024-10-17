@@ -8,7 +8,7 @@ var current = 1
   // API call function
 const fetchArticles = async () => {
 	try {
-		const response = await fetch("http://localhost:3000/api/articles/pending"); // fetch all pending articles
+		const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/pending`); // fetch all pending articles
 		if (!response.ok) {
 			throw new Error("Failed to fetch");
 		}
@@ -40,7 +40,7 @@ const handleRemove = (idToRemove: string) => {
 // Function to handle approve articles
 const approveArticle = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/articles/${id}/approved`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/approved`, {
       method: 'PATCH',
     });
     if (response.ok) {
@@ -56,7 +56,7 @@ const approveArticle = async (id: string) => {
 //function to handle article rejection
 const rejectArticle = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/articles/${id}/reject`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}/reject`, {
       method: 'PATCH',
     });
     if (response.ok) {
