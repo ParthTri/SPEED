@@ -23,7 +23,7 @@ const SearchPage = () => {
       setError(e.message);
       setFilteredArticles([]); // Clear articles on error
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
   
