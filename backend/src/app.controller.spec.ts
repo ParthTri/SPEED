@@ -1,14 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { getModelToken } from '@nestjs/mongoose'; // Import getModelToken
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
+    const mockArticleModel = {}; // Provide a mock model for the Article
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService,
+        {
+          provide: getModelToken('Article'), // Mock the ArticleModel
+          useValue: mockArticleModel,
+        },
+      ],
     }).compile();
 
     appController = app.get<AppController>(AppController);
