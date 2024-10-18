@@ -5,7 +5,8 @@ import {
   Body,
   Patch,
   Param,
-  NotFoundException,
+  Query, // Keep this from your current branch (HEAD)
+  NotFoundException, // Keep this from the 'development' branch
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Article } from './schemas/article.schema';
@@ -31,6 +32,11 @@ export class ArticlesController {
   @Get('rejected')
   async getRejectedArticles(): Promise<Article[]> {
     return this.articlesService.getArticlesByState('approved');
+  }
+
+  @Get('search') // Ensure the 'search' route is properly defined
+  async searchArticles(@Query('term') searchTerm: string) {
+    return this.articlesService.searchArticles(searchTerm);
   }
 
   //get all articles with approved state

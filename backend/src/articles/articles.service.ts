@@ -11,6 +11,7 @@ import { SubmitRatingDTO } from './rating.dto';
 
 @Injectable()
 export class ArticlesService {
+  [x: string]: any;
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
@@ -25,6 +26,24 @@ export class ArticlesService {
     return this.articleModel.find({ state }).exec(); // Fetches all articles with the specified state
   }
 
+  // Method to search articles by a search term
+  async searchArticles(searchTerm: string): Promise<Article[]> {
+    const searchRegex = new RegExp(searchTerm, 'i'); // Create a case-insensitive regex for the search term
+    return this.articleModel
+      .find({
+        $or: [
+          { title: searchRegex },
+          { authors: searchRegex },
+          { source: searchRegex },
+          { doi: searchRegex },
+          { claim: searchRegex },
+          { evidence: searchRegex },
+        ],
+      })
+      .exec();
+  }
+
+  // Method to get an article by its ID
   async getArticleById(id: string): Promise<Article> {
     try {
       // Validate if the id is a valid MongoDB ObjectId
