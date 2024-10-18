@@ -20,7 +20,8 @@ const SearchPage = () => {
       const results: ArticleInterface[] = await response.json();
       setFilteredArticles(results);
     } catch (e) {
-      setError(e.message);
+      const err = e as Error; // Cast 'e' to Error
+      setError(err.message);
       setFilteredArticles([]); // Clear articles on error
     } finally {
       setLoading(false); 
