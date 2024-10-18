@@ -49,7 +49,7 @@ const SearchPage = () => {
         {filteredArticles.length > 0 ? (
           <ul>
             {filteredArticles.map((article) => (
-              <li key={article.id}>{article.title}</li>
+              <li key={article._id}>{article.title}</li>
             ))}
           </ul>
         ) : (
