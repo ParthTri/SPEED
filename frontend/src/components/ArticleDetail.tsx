@@ -1,49 +1,144 @@
-import React from 'react';
-
-interface ArticleInterface {
-  id: string;
-  title: string;
-  authors: string;
-  source: string;
-  pubyear: string;
-  doi: string;
-  claim: string;
-  evidence: string;
-}
+import React, { useEffect, useState } from "react";
+import { ArticleInterface } from "@/utils/article.interface";
+import styles from "../styles/ArticleDetail.module.scss";
 
 interface ArticleDetailProps {
-  article: ArticleInterface;
-  onClose: () => void;
+	article: ArticleInterface;
+	onClose: () => void;
+}
+
+interface RatingData {
+	average_rating: number;
+	total_ratings: number;
 }
 
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ article, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div className="mt-3 text-center">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">{article.title}</h3>
-          <div className="mt-2 px-7 py-3">
-            <p className="text-sm text-gray-500">
-              <strong>Authors:</strong> {article.authors}<br/>
-              <strong>Source:</strong> {article.source}<br/>
-              <strong>Publication Year:</strong> {article.pubyear}<br/>
-              <strong>DOI:</strong> {article.doi}<br/>
-              <strong>Claim:</strong> {article.claim}<br/>
-              <strong>Evidence:</strong> {article.evidence}
-            </p>
-          </div>
-          <div className="items-center px-4 py-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	const [ratingData, setRatingData] = useState<RatingData | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [selectedRating, setSelectedRating] = useState<number>(0);
+
+	useEffect(() => {
+		fetchRating();
+	}, [article._id]); // Change article.id to article._id to match MongoDB
+
+	const fetchRating = async () => {
+		try {
+			const response = await fetch(
+				`http://localhost:3000/api/articles/${article._id}/rating`
+			);
+			if (!response.ok) throw new Error("Failed to fetch rating");
+			const data = await response.json();
+			setRatingData(data);
+		} catch (err) {
+			setError("Failed to load rating");
+			console.error(err);
+		}
+	};
+
+	const handleRate = async (rating: number) => {
+		setIsSubmitting(true);
+		setError(null);
+
+		try {
+			const response = await fetch(
+				`http://localhost:3000/api/articles/${article._id}/rate`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						rating,
+						user_id: "user123",
+					}),
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to submit rating");
+			}
+
+			setSelectedRating(rating);
+			await fetchRating();
+		} catch (err) {
+			setError("Failed to submit rating");
+			console.error(err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	return (
+		<div className={styles.overlay}>
+			<div className={styles.modal}>
+				<button className={styles.closeButton} onClick={onClose}>
+					&times;
+				</button>
+
+				<h2 className={styles.title}>{article.title}</h2>
+
+				<div className={styles.ratingSection}>
+					<div className={styles.starRating}>
+						{[1, 2, 3, 4, 5].map((star) => (
+							<button
+								key={star}
+								onClick={() => !isSubmitting && handleRate(star)}
+								className={`${styles.star} ${
+									selectedRating >= star ? styles.active : ""
+								}`}
+								disabled={isSubmitting}
+							>
+								★
+							</button>
+						))}
+					</div>
+
+					{ratingData && (
+						<div className={styles.ratingInfo}>
+							<span>
+								Average Rating: {ratingData.average_rating.toFixed(1)} ★
+							</span>
+							<span>Total Ratings: {ratingData.total_ratings}</span>
+						</div>
+					)}
+
+					{error && <p className={styles.error}>{error}</p>}
+				</div>
+
+				<div className={styles.details}>
+					<div className={styles.field}>
+						<label>Authors:</label>
+						<span>
+							{Array.isArray(article.authors)
+								? article.authors.join(", ")
+								: article.authors}
+						</span>
+					</div>
+
+					<div className={styles.field}>
+						<label>Source:</label>
+						<span>{article.source}</span>
+					</div>
+
+					<div className={styles.field}>
+						<label>Publication Year:</label>
+						<span>{article.pubyear}</span>
+					</div>
+
+					<div className={styles.field}>
+						<label>DOI:</label>
+						<span>{article.doi}</span>
+					</div>
+
+					<div className={styles.field}>
+						<label>Summary:</label>
+						<p>{article.summary}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default ArticleDetail;
