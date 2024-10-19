@@ -1,0 +1,44 @@
+#bibtex {
+	max-width: "75%";
+	height: "50%";
+	resize: none;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+}
+
+.submit {
+	min-width: 80px;
+	max-width: 150px;
+	min-height: 50px;
+	font-size: 24px;
+	background: #fff;
+	border: 1px solid black;
+
+	transition: background 0.25s, color 0.25s;
+}
+
+.submit:hover {
+	background: darkblue;
+	color: #fff;
+	border: 1px solid darkblue;
+}
+
+.main {
+	display: grid;
+	grid-template-columns: 1fr 0.5fr;
+	grid-template-rows: 1fr;
+	grid-template-areas: "input errors";
+
+	padding: 1rem;
+	form {
+		grid-area: "input";
+	}
+
+	div {
+		grid-area: "errors";
+	}
+}

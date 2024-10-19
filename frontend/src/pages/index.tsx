@@ -6,7 +6,9 @@ import { ArticleInterface } from "@/utils/article.interface";
 // API call function
 const fetchArticles = async () => {
 	try {
-		const response = await fetch("http://localhost:3000/api/articles"); // Full API URL for backend
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/articles/submitted`
+		); // Full API URL for backend
 		if (!response.ok) {
 			throw new Error("Failed to fetch");
 		}
@@ -43,6 +45,16 @@ export default function Home() {
 	const sortedArticles = [...articles].sort((a, b) => {
 		if (!sortConfig) return 0;
 		const { key, direction } = sortConfig;
+
+		if (
+			a === undefined ||
+			b === undefined ||
+			a?.[key] === undefined ||
+			b?.[key] === undefined
+		) {
+			return 0;
+		}
+
 		if (a[key] < b[key]) {
 			return direction === "ascending" ? -1 : 1;
 		}
